@@ -1,0 +1,20 @@
+modules = ["nodejs-20"]
+run = ". ./setup-node.sh && npm run start"
+
+[deployment]
+build = "npm install --legacy-peer-deps && npm run build"
+run = ". ./setup-node.sh && npm run start"
+
+[deployment.healthcheck]
+path = "/"
+
+[nix]
+packages = []
+
+[env]
+PATH = "/nix/store/8y4ls7z2sfxbq6ch3yp45l28p29qswvx-nodejs-20.19.3-wrapped/bin:$PATH"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+

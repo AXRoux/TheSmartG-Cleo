@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@layer utilities {
+  body {
+    font-family: var(--font-body);
+  }
+}
+
+@layer base {
+  :root {
+    --background: #000000;
+    --foreground: #ffffff;
+    --card: #000000;
+    --card-foreground: #ffffff;
+    --popover: #000000;
+    --popover-foreground: #ffffff;
+    --primary: #ffffff;
+    --primary-foreground: #000000;
+    --secondary: rgba(255, 255, 255, 0.1);
+    --secondary-foreground: #ffffff;
+    --muted: rgba(255, 255, 255, 0.05);
+    --muted-foreground: rgba(255, 255, 255, 0.6);
+    --accent: rgba(255, 255, 255, 0.05);
+    --accent-foreground: #ffffff;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: rgba(255, 255, 255, 0.1);
+    --input: rgba(255, 255, 255, 0.1);
+    --ring: #ffffff;
+    --chart-1: #e67e22;
+    --chart-2: #2d8659;
+    --chart-3: #1e3a5f;
+    --chart-4: #f1c40f;
+    --chart-5: #e74c3c;
+    --radius: 0.5rem;
+    --sidebar-background: #1a1a1a;
+    --sidebar-foreground: #f0f0f0;
+    --sidebar-primary: #ffffff;
+    --sidebar-primary-foreground: #000000;
+    --sidebar-accent: rgba(255, 255, 255, 0.1);
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --sidebar-ring: #ffffff;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  p {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    line-height: 1.7;
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .container {
+    margin-inline: auto;
+    padding-inline: 2rem;
+  }
+}
+
+/* Hide Next.js error overlay portal */
+nextjs-portal {
+  display: none !important;
+}
