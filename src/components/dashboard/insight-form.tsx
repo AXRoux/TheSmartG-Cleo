@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,14 +34,7 @@ interface InsightFormProps {
   loading?: boolean;
 }
 
-const CATEGORIES = [
-  'Personal Growth',
-  'Wellness',
-  'Leadership',
-  'Community',
-  'Purpose',
-  'Mindset'
-];
+// Categories are now fetched dynamically from Convex
 
 const MAX_TITLE_LENGTH = 100;
 const MAX_EXCERPT_LENGTH = 300;
@@ -51,6 +46,8 @@ export const InsightForm: React.FC<InsightFormProps> = ({
   onCancel,
   loading = false
 }) => {
+  // Fetch categories from Convex
+  const categories = useQuery(api.categories.getCategories, { activeOnly: true });
   const [formData, setFormData] = useState<InsightFormData>({
     title: initialData?.title || '',
     excerpt: initialData?.excerpt || '',
@@ -331,13 +328,14 @@ export const InsightForm: React.FC<InsightFormProps> = ({
                     id="category"
                     className={errors.category ? 'border-destructive' : ''}
                     aria-invalid={!!errors.category}
+                    disabled={!categories}
                   >
-                    <SelectValue placeholder="Select category..." />
+                    <SelectValue placeholder={categories ? "Select category..." : "Loading categories..."} />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                    {categories?.map((category) => (
+                      <SelectItem key={category._id} value={category.name}>
+                        {category.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
