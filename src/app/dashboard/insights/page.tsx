@@ -84,32 +84,44 @@ export default function InsightsManagement() {
     }
   };
 
-  const ActionButtons = ({ insight }: { insight: any }) => (
-    <div className="flex gap-2">
-      <Link href={`/insights/${insight._id}`}>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10" title="View">
-          <Eye className="h-4 w-4" />
+  // Generate slug from title if not available
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  const ActionButtons = ({ insight }: { insight: any }) => {
+    const slug = insight.slug || generateSlug(insight.title);
+    
+    return (
+      <div className="flex gap-2">
+        <Link href={`/insights/${slug}`}>
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10" title="View">
+            <Eye className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Link href={`/dashboard/insights/${insight._id}/edit`}>
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10" title="Edit">
+            <Edit2 className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10" title="Duplicate">
+          <Copy className="h-4 w-4" />
         </Button>
-      </Link>
-      <Link href={`/dashboard/insights/${insight._id}/edit`}>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10" title="Edit">
-          <Edit2 className="h-4 w-4" />
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10" 
+          title="Delete"
+          onClick={() => handleDelete(insight._id, insight.title)}
+        >
+          <Trash2 className="h-4 w-4" />
         </Button>
-      </Link>
-      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10" title="Duplicate">
-        <Copy className="h-4 w-4" />
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10" 
-        title="Delete"
-        onClick={() => handleDelete(insight._id, insight.title)}
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
-    </div>
-  );
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen">

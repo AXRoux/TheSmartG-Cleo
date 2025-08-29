@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 // Initialize the database with sample data
@@ -119,8 +119,17 @@ export const initializeDatabase = mutation({
           return `${minutes} min`;
         };
 
+        // Generate slug from title
+        const generateSlug = (title: string) => {
+          return title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+        };
+
         await ctx.db.insert("insights", {
           ...insight,
+          slug: generateSlug(insight.title),
           author: "Vance Stratir",
           authorName: "Vance Stratir",
           authorBio: "Entrepreneur and advocate for personal growth.",
@@ -144,11 +153,103 @@ export const initializeDatabase = mutation({
 });
 
 // Migration function to update existing insights with new fields
+// Debug function to check specific document
+export const debugInsight = query({
+  args: { id: v.string() },
+  handler: async (ctx, args) => {
+    const insight = await ctx.db.get(args.id as any);
+    return insight;
+  },
+});
+
+// Check all insights and their slug status
+export const checkAllInsights = query({
+  args: {},
+  handler: async (ctx) => {
+    const allInsights = await ctx.db.query("insights").collect();
+    return allInsights.map(insight => ({
+      id: insight._id,
+      title: insight.title,
+      hasSlug: !!insight.slug,
+      slug: insight.slug || null,
+      author: insight.author,
+      generatedSlug: insight.title ? insight.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '') : null,
+    }));
+  },
+});
+
+// Simple test function to get insight by generated slug
+export const testGetByGeneratedSlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    const allInsights = await ctx.db.query("insights").collect();
+    const insight = allInsights.find(i => {
+      if (!i.title) return false;
+      const generatedSlug = i.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      return generatedSlug === args.slug;
+    });
+    
+    return insight ? {
+      found: true,
+      title: insight.title,
+      slug: insight.slug,
+      generatedSlug: insight.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, ''),
+      id: insight._id
+    } : { found: false };
+  },
+});
+
+// Fix specific insight by ID
+export const fixInsightSlug = mutation({
+  args: { id: v.string() },
+  handler: async (ctx, args) => {
+    const insight = await ctx.db.get(args.id as any);
+    if (!insight) {
+      return { error: "Insight not found" };
+    }
+
+    // Generate slug from title
+    const generateSlug = (title: string) => {
+      return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    };
+
+    if (!insight.slug) {
+      let baseSlug = generateSlug(insight.title);
+      let slug = baseSlug;
+      let counter = 1;
+      
+      // Check for duplicate slugs and append number if needed
+      while (await ctx.db.query("insights").withIndex("by_slug", (q) => q.eq("slug", slug)).first()) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+      
+      await ctx.db.patch(insight._id, { slug });
+      return { message: `Added slug: ${slug}` };
+    }
+
+    return { message: "Insight already has slug", slug: insight.slug };
+  },
+});
+
 export const migrateInsights = mutation({
   args: {},
   handler: async (ctx) => {
     const allInsights = await ctx.db.query("insights").collect();
     let updatedCount = 0;
+    const results = [];
 
     // Calculate read time based on content
     const calculateReadTime = (content: string) => {
@@ -158,9 +259,35 @@ export const migrateInsights = mutation({
       return `${minutes} min`;
     };
 
+    // Generate slug from title
+    const generateSlug = (title: string) => {
+      return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    };
+
     for (const insight of allInsights) {
       const updates: any = {};
       let needsUpdate = false;
+      const insightInfo = { id: insight._id, title: insight.title, hasSlug: !!insight.slug };
+
+      // Add slug if missing (CRITICAL FIX)
+      if (!insight.slug) {
+        let baseSlug = generateSlug(insight.title);
+        let slug = baseSlug;
+        let counter = 1;
+        
+        // Check for duplicate slugs and append number if needed
+        while (await ctx.db.query("insights").withIndex("by_slug", (q) => q.eq("slug", slug)).first()) {
+          slug = `${baseSlug}-${counter}`;
+          counter++;
+        }
+        
+        updates.slug = slug;
+        needsUpdate = true;
+        insightInfo.addedSlug = slug;
+      }
 
       // Add readTime if missing
       if (!insight.readTime) {
@@ -181,15 +308,80 @@ export const migrateInsights = mutation({
       }
 
       if (needsUpdate) {
-        await ctx.db.patch(insight._id, updates);
-        updatedCount++;
+        try {
+          await ctx.db.patch(insight._id, updates);
+          updatedCount++;
+          insightInfo.updated = true;
+        } catch (error) {
+          insightInfo.error = error.message;
+        }
       }
+
+      results.push(insightInfo);
     }
 
     return {
       message: `Migration completed. Updated ${updatedCount} insights.`,
       totalInsights: allInsights.length,
       updatedCount,
+      details: results,
+    };
+  },
+});
+
+// Force fix all insights with missing slugs
+export const forceFixSlugs = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Get all insights, including those that might not match the schema
+    const allDocs = await ctx.db.query("insights").collect();
+    let fixedCount = 0;
+    const results = [];
+
+    // Generate slug from title
+    const generateSlug = (title: string) => {
+      return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    };
+
+    for (const doc of allDocs) {
+      const docInfo = { id: doc._id, title: doc.title || 'Untitled' };
+      
+      if (!doc.slug) {
+        try {
+          let baseSlug = generateSlug(doc.title || 'untitled');
+          let slug = baseSlug;
+          let counter = 1;
+          
+          // Check for duplicate slugs and append number if needed
+          while (await ctx.db.query("insights").withIndex("by_slug", (q) => q.eq("slug", slug)).first()) {
+            slug = `${baseSlug}-${counter}`;
+            counter++;
+          }
+          
+          await ctx.db.patch(doc._id, { slug });
+          fixedCount++;
+          docInfo.addedSlug = slug;
+          docInfo.status = 'fixed';
+        } catch (error) {
+          docInfo.error = error.message;
+          docInfo.status = 'failed';
+        }
+      } else {
+        docInfo.status = 'already-has-slug';
+        docInfo.existingSlug = doc.slug;
+      }
+      
+      results.push(docInfo);
+    }
+
+    return {
+      message: `Force fix completed. Fixed ${fixedCount} documents.`,
+      totalDocs: allDocs.length,
+      fixedCount,
+      details: results,
     };
   },
 });

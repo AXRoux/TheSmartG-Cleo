@@ -44,7 +44,7 @@
     --foreground: #ffffff;
     --card: #000000;
     --card-foreground: #ffffff;
-    --popover: #000000;
+    --popover: #1a1a1a;
     --popover-foreground: #ffffff;
     --primary: #ffffff;
     --primary-foreground: #000000;
@@ -52,7 +52,7 @@
     --secondary-foreground: #ffffff;
     --muted: rgba(255, 255, 255, 0.05);
     --muted-foreground: rgba(255, 255, 255, 0.6);
-    --accent: rgba(255, 255, 255, 0.05);
+    --accent: rgba(255, 255, 255, 0.1);
     --accent-foreground: #ffffff;
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
@@ -135,4 +135,55 @@
 /* Hide Next.js error overlay portal */
 nextjs-portal {
   display: none !important;
+}
+
+/* Ensure select dropdown is visible */
+[data-radix-select-content] {
+  z-index: 9999 !important;
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-radix-select-item] {
+  color: var(--popover-foreground) !important;
+}
+
+[data-radix-select-item]:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Fix select content positioning */
+[data-slot="select-content"] {
+  background: var(--popover) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  z-index: 9999 !important;
+}
+
+/* Additional select dropdown fixes */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
+/* Ensure select items are visible */
+[data-slot="select-item"] {
+  background: transparent !important;
+  color: var(--popover-foreground) !important;
+  padding: 0.5rem 0.75rem !important;
+  cursor: pointer !important;
+}
+
+[data-slot="select-item"]:hover,
+[data-slot="select-item"][data-highlighted] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+/* Force visibility for debugging */
+.select-content-debug {
+  background: #1a1a1a !important;
+  border: 2px solid #ffffff !important;
+  color: white !important;
+  min-height: 100px !important;
+  z-index: 9999 !important;
 }

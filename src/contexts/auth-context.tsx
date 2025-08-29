@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const authToken = getCookie('auth-token');
       const userId = getCookie('user-id');
       
-      if (authToken && userId === 'jn737k33cksxew8vypzg3457s57petqv') {
+      if (authToken && userId) {
         // In a real app, you'd validate the token with your backend
         setUser({ 
           _id: userId as Id<"users">, 
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      // Simple demo authentication - in production, use proper auth with Convex
+      // Simple demo authentication - the user will be initialized in the database when needed
       if (email === 'Vance@Stratir.com' && password === 'admin123') {
         const userData = {
           _id: 'jn737k33cksxew8vypzg3457s57petqv' as Id<"users">,
@@ -87,11 +87,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           isActive: true
         };
         
-        // Generate a simple auth token (in production, use proper JWT or session tokens)
+        // Generate a simple auth token
         const authToken = `auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         
         // Set secure cookies
-        setCookie('auth-token', authToken, 7); // 7 days
+        setCookie('auth-token', authToken, 7);
         setCookie('user-id', userData._id, 7);
         
         // Also keep localStorage for backward compatibility

@@ -48,6 +48,11 @@ export const InsightForm: React.FC<InsightFormProps> = ({
 }) => {
   // Fetch categories from Convex
   const categories = useQuery(api.categories.getCategories, { activeOnly: true });
+  
+  // Debug: Log categories to console
+  useEffect(() => {
+    console.log('Categories loaded:', categories);
+  }, [categories]);
   const [formData, setFormData] = useState<InsightFormData>({
     title: initialData?.title || '',
     excerpt: initialData?.excerpt || '',
@@ -332,12 +337,22 @@ export const InsightForm: React.FC<InsightFormProps> = ({
                   >
                     <SelectValue placeholder={categories ? "Select category..." : "Loading categories..."} />
                   </SelectTrigger>
-                  <SelectContent>
-                    {categories?.map((category) => (
-                      <SelectItem key={category._id} value={category.name}>
-                        {category.name}
+                  <SelectContent className="bg-black border border-white/10 shadow-lg rounded-md z-[9999]">
+                    {categories && categories.length > 0 ? (
+                      categories.map((category) => (
+                        <SelectItem 
+                          key={category._id} 
+                          value={category.name}
+                          className="px-3 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                        >
+                          {category.name}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value="no-categories" disabled className="px-3 py-2 text-white/50">
+                        {categories === undefined ? "Loading categories..." : "No categories available"}
                       </SelectItem>
-                    ))}
+                    )}
                   </SelectContent>
                 </Select>
                 {errors.category && (

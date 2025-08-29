@@ -30,101 +30,117 @@ export default function BoundariesProtectYourPeacePage() {
       {/* Main Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Article Header */}
-        <header className="mb-8">
-          <div className="space-y-6">
-          {/* Category */}
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <Badge variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
+        <header className="mb-12">
+          <div className="flex items-center space-x-3 mb-6">
+            <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
               Personal Growth
             </Badge>
-            <span>•</span>
-            <span>Articles</span>
+            <div className="flex items-center text-gray-500 text-sm space-x-4">
+              <div className="flex items-center space-x-1">
+                <Calendar className="h-4 w-4" />
+                <span>July 2025</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Clock className="h-4 w-4" />
+                <span>3 min read</span>
+              </div>
+            </div>
           </div>
-
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+          
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
             Boundaries Protect Your Peace
           </h1>
-
-          {/* Meta Information */}
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span>Cleopatra Russell</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              <span>July 2025</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              <span>Time to read: 3 min.</span>
-            </div>
-          </div>
-
-          {/* Subtitle */}
-          <p className="text-xl text-gray-600 leading-relaxed max-w-3xl">
+          
+          <p className="text-xl text-gray-600 leading-relaxed">
             Why setting and keeping healthy boundaries is an act of self-protection, not distance.
           </p>
-          </div>
         </header>
 
+        {/* Featured Image */}
+        <div className="mb-12">
+          <img 
+            src="https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQsiHW4xpcOrx6KXupv5ZENylIGkanFQiPw2s9"
+            alt="Boundaries protect your peace"
+            className="w-full h-96 object-cover rounded-lg shadow-lg"
+          />
+        </div>
+
         {/* Article Content */}
-        <div className="prose prose-lg prose-gray max-w-none">
-          {/* Opening Quote */}
-          <blockquote className="text-2xl font-medium text-gray-900 border-l-4 border-gray-900 pl-6 my-8 italic">
-            "Familiarity breeds contempt."
+        <div className="prose prose-lg max-w-none">
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Setting boundaries isn't about building walls—it's about creating space for your peace to flourish. 
+            In a world that constantly demands your attention, energy, and time, boundaries become your most 
+            powerful tool for self-preservation.
+          </p>
+
+          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Why Boundaries Matter</h2>
+          
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Boundaries protect your peace by defining what you will and won't accept in your relationships, 
+            work, and personal life. They're not about being distant or unkind—they're about being intentional 
+            with your energy and creating space for what truly matters.
+          </p>
+
+          <blockquote className="border-l-4 border-emerald-500 pl-6 italic text-gray-600 my-8">
+            "Boundaries are not walls. They are gates with consciously chosen entry points."
           </blockquote>
 
-          <p className="text-lg leading-relaxed text-gray-700 mb-6">
-            I heard that often growing up, but I didn't really understand it until I worked in an environment where people constantly disrespected the boundaries of others.
+          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">How to Set Healthy Boundaries</h2>
+          
+          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
+            <li>Start small and be consistent</li>
+            <li>Communicate clearly and kindly</li>
+            <li>Don't over-explain your decisions</li>
+            <li>Practice saying no without guilt</li>
+            <li>Remember: boundaries are for you, not others</li>
+          </ul>
+
+          <p className="text-gray-700 leading-relaxed">
+            Your peace is worth protecting. Setting boundaries isn't selfish—it's necessary. When you protect 
+            your peace, you show up better for the people and causes that matter most to you.
           </p>
-
-          <p className="text-lg leading-relaxed text-gray-700 mb-6">
-            Now that I operate more as an entrepreneur and less as a corporate employee, I've come to value the importance of boundaries in every part of my life. Setting them, keeping them, and understanding that they aren't about being distant or difficult, they're about protection.
-          </p>
-
-          {/* Key Message */}
-          <div className="bg-gray-50 border-l-4 border-gray-900 p-8 my-12">
-            <p className="text-2xl font-medium text-gray-900 leading-relaxed mb-4">
-              Boundaries protect your peace.
-            </p>
-            <p className="text-2xl font-medium text-gray-900 leading-relaxed mb-4">
-              They protect your dignity.
-            </p>
-            <p className="text-2xl font-medium text-gray-900 leading-relaxed">
-              They protect your emotional well-being.
-            </p>
-          </div>
-
-          <p className="text-lg leading-relaxed text-gray-700 mb-6">
-            Some people won't respect them. They'll test them, push past them, or act as if they don't exist. But just because someone wants access to something they are not entitled to, doesn't mean they deserve it.
-          </p>
-
-          {/* Call to Action */}
-          <div className="bg-gray-50 rounded-lg p-8 my-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">This Week's Challenge</h2>
-            <p className="text-lg leading-relaxed text-gray-700 mb-4">
-              Take a moment to check in with yourself. What do you need to stay happy, healthy, and productive? Start there. Create the boundaries that support that version of you.
-            </p>
-            <p className="text-lg font-medium text-gray-900">
-              And keep them. You're worth protecting.
-            </p>
-          </div>
         </div>
 
         {/* Author Section */}
-        <div className="border-t border-gray-200 pt-12 mt-16">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-              <User className="w-8 h-8 text-gray-600" />
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="flex items-center space-x-4 mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+              <User className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Cleopatra Russell</h3>
-              <p className="text-gray-600">Entrepreneur and advocate for personal growth.</p>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Cleopatra Russell
+              </h3>
+              <p className="text-gray-600">
+                Entrepreneur and advocate for personal growth
+              </p>
+              <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                <div className="flex items-center space-x-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>Published July 2025</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Eye className="h-4 w-4" />
+                  <span>127 views</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-8 pt-8 border-t border-gray-200">
+          <div className="flex justify-center">
+            <Link href="/#live-learn-hub">
+              <Button 
+                variant="default" 
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                View More Insights
+              </Button>
+            </Link>
+          </div>
+        </footer>
       </article>
     </div>
   );

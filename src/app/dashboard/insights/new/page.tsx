@@ -27,6 +27,7 @@ export default function CreateInsightPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [authorBio, setAuthorBio] = useState('Entrepreneur and advocate for personal growth.');
   const [isLoading, setIsLoading] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const [readingTime, setReadingTime] = useState(0);
@@ -40,6 +41,24 @@ export default function CreateInsightPage() {
   // Fetch categories for dropdown
   const categories = useQuery(api.categories.getCategories, { activeOnly: true });
   const createInsight = useMutation(api.insights.createInsight);
+  const initializeCategories = useMutation(api.initialize.initializeDatabase);
+
+  // Debug: Log categories and user
+  useEffect(() => {
+    console.log('Dashboard - Categories loaded:', categories);
+    console.log('Dashboard - User object:', user);
+  }, [categories, user]);
+
+  // Initialize categories if they don't exist
+  const handleInitializeCategories = async () => {
+    try {
+      await initializeCategories();
+      toast.success('Categories initialized successfully!');
+    } catch (error) {
+      toast.error('Failed to initialize categories');
+      console.error('Categories initialization error:', error);
+    }
+  };
 
   // Calculate word count and reading time
   const calculateStats = useCallback((text: string) => {
@@ -189,25 +208,42 @@ export default function CreateInsightPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim() || !content.trim() || !category) {
-      toast.error('Please fill in all required fields');
+    if (!title.trim() || !content.trim()) {
+      toast.error('Please fill in title and content');
+      return;
+    }
+    
+    if (!category) {
+      toast.error('Please select a category');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      await createInsight({
+      // Ensure the database is initialized (creates user and categories)
+      const initResult = await initializeCategories(); // This is actually the initializeDatabase mutation
+      
+      // Use the logged-in user ID or the user ID from initialization
+      let authorId = user?._id;
+      
+      if (!authorId) {
+        // If no user is logged in, we need to get the initialized user ID
+        // The initializeDatabase returns the user ID
+        authorId = initResult?.userId || "jn737k33cksxew8vypzg3457s57petqv" as any; // Final fallback
+      }
+      
+      const result = await createInsight({
         title: title.trim(),
         content: content.trim(),
-        excerpt: excerpt.trim() || content.trim().substring(0, 200) + '...',
-        category,
-        authorId: user?._id || 'jn737k33cksxew8vypzg3457s57petqv' as any,
-        status,
-        featuredImage: featuredImage.trim() || undefined,
-        tags,
+        excerpt: excerpt.trim() || `${content.substring(0, 200)}...`,
+        category: category,
+        authorId: authorId as any,
+        status: status,
+        featuredImage: featuredImage || undefined,
+        tags: tags,
         readTime: `${readingTime} min`,
-        authorBio: "Entrepreneur and advocate for personal growth.",
+        authorBio: authorBio.trim(),
       });
 
       toast.success(`Insight ${status === 'published' ? 'published' : 'saved as draft'} successfully!`);
@@ -215,10 +251,18 @@ export default function CreateInsightPage() {
       // Clear the draft from localStorage after successful submission
       localStorage.removeItem('insight-draft');
       
+      // Generate slug for the URL
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      
+      if (status === 'published') {
+        toast.success(`View your published insight at: /insights/${slug}`);
+      }
+      
       router.push('/dashboard/insights');
     } catch (error) {
       console.error('Error creating insight:', error);
-      toast.error('Failed to create insight');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`Failed to create insight: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -509,6 +553,30 @@ Example:
               </CardContent>
             </Card>
 
+            {/* Author Bio */}
+            <Card className="bg-white/5 border border-white/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base text-white">Author Information</CardTitle>
+                <CardDescription className="text-xs text-white/60">How you'll appear as the author</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="authorBio" className="text-sm font-medium text-white/70">Author Bio</Label>
+                  <Textarea
+                    id="authorBio"
+                    value={authorBio}
+                    onChange={(e) => setAuthorBio(e.target.value)}
+                    placeholder="A brief description about yourself..."
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-white/30 resize-none text-sm"
+                    rows={3}
+                  />
+                  <p className="text-xs text-white/40">
+                    This will appear on your insight page
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Publish Settings - Enhanced */}
             <Card className="bg-white/5 border border-white/10">
               <CardHeader className="pb-2">
@@ -545,16 +613,36 @@ Example:
                     <SelectTrigger className="h-9 bg-white/5 border-white/10 text-white focus:border-white/30 focus:ring-white/20">
                       <SelectValue placeholder="Select category" className="text-white" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border border-white/10 shadow-lg rounded-md">
-                      {categories?.map((cat) => (
-                        <SelectItem 
-                          key={cat._id} 
-                          value={cat.name}
-                          className="px-3 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                        >
-                          {cat.name}
-                        </SelectItem>
-                      ))}
+                    <SelectContent className="bg-black border border-white/10 shadow-lg rounded-md z-[9999]">
+                      {categories && categories.length > 0 ? (
+                        categories.map((cat) => (
+                          <SelectItem 
+                            key={cat._id} 
+                            value={cat.name}
+                            className="px-3 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                          >
+                            {cat.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <>
+                          <SelectItem value="no-categories" disabled className="px-3 py-2 text-white/50">
+                            {categories === undefined ? "Loading categories..." : "No categories found"}
+                          </SelectItem>
+                          {categories !== undefined && categories.length === 0 && (
+                            <div className="p-2">
+                              <Button 
+                                type="button"
+                                size="sm" 
+                                onClick={handleInitializeCategories}
+                                className="w-full text-xs"
+                              >
+                                Initialize Categories
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

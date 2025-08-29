@@ -34,6 +34,7 @@ export default function EditInsightPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
   const [status, setStatus] = useState<'draft' | 'published' | 'archived'>('draft');
+  const [authorBio, setAuthorBio] = useState('Entrepreneur and advocate for personal growth.');
   const [isLoading, setIsLoading] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const [readingTime, setReadingTime] = useState(0);
@@ -47,6 +48,11 @@ export default function EditInsightPage() {
   const categories = useQuery(api.categories.getCategories, { activeOnly: true });
   const updateInsight = useMutation(api.insights.updateInsight);
 
+  // Debug: Log categories
+  useEffect(() => {
+    console.log('Edit page - Categories loaded:', categories);
+  }, [categories]);
+
   // Load insight data when it's available
   useEffect(() => {
     if (insight) {
@@ -57,6 +63,7 @@ export default function EditInsightPage() {
       setFeaturedImage(insight.featuredImage || '');
       setTags(insight.tags || []);
       setStatus(insight.status);
+      setAuthorBio(insight.authorBio || 'Entrepreneur and advocate for personal growth.');
     }
   }, [insight]);
 
@@ -540,16 +547,22 @@ Example:
                     <SelectTrigger className="h-9 bg-white/5 border-white/10 text-white focus:border-white/30 focus:ring-white/20">
                       <SelectValue placeholder="Select category" className="text-white" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border border-white/10 shadow-lg rounded-md">
-                      {categories?.map((cat) => (
-                        <SelectItem 
-                          key={cat._id} 
-                          value={cat.name}
-                          className="px-3 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                        >
-                          {cat.name}
+                    <SelectContent className="bg-black border border-white/10 shadow-lg rounded-md z-[9999]">
+                      {categories && categories.length > 0 ? (
+                        categories.map((cat) => (
+                          <SelectItem 
+                            key={cat._id} 
+                            value={cat.name}
+                            className="px-3 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                          >
+                            {cat.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="no-categories" disabled className="px-3 py-2 text-white/50">
+                          {categories === undefined ? "Loading categories..." : "No categories found"}
                         </SelectItem>
-                      ))}
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

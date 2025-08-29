@@ -103,23 +103,36 @@ export const LiveLearnHub = () => {
     limit: 20 
   });
 
+  // Generate slug from title if not available
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
   // Combine original insights with new ones from Convex
   const allInsights = useMemo(() => {
-    const newInsights: Insight[] = convexInsights?.map(insight => ({
-      id: insight._id,
-      category: insight.category,
-      title: insight.title,
-      description: insight.excerpt,
-      author: insight.authorName || insight.author,
-      date: new Date(insight.createdAt).toLocaleDateString('en-US', { 
-        month: 'long', 
-        year: 'numeric' 
-      }),
-      readTime: insight.readTime || "3 min", // Default read time if not set
-      authorBio: insight.authorBio || "Entrepreneur and advocate for personal growth.",
-      image: insight.featuredImage || "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQsiHW4xpcOrx6KXupv5ZENylIGkanFQiPw2s9", // fallback image
-      link: `/insights/${insight._id}` // Dynamic link for new insights
-    })) || [];
+    const newInsights: Insight[] = convexInsights?.map(insight => {
+      // Use existing slug or generate one from title
+      const slug = insight.slug || generateSlug(insight.title);
+      
+      return {
+        id: insight._id,
+        category: insight.category,
+        title: insight.title,
+        description: insight.excerpt,
+        author: insight.authorName || insight.author,
+        date: new Date(insight.createdAt).toLocaleDateString('en-US', { 
+          month: 'long', 
+          year: 'numeric' 
+        }),
+        readTime: insight.readTime || "3 min",
+        authorBio: insight.authorBio || "Entrepreneur and advocate for personal growth.",
+        image: insight.featuredImage || "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQsiHW4xpcOrx6KXupv5ZENylIGkanFQiPw2s9",
+        link: `/insights/${slug}`
+      };
+    }) || [];
 
     // Add read time and author bio to original insights for consistency
     const enhancedOriginalInsights = originalInsights.map(insight => ({
@@ -128,7 +141,7 @@ export const LiveLearnHub = () => {
       authorBio: "Entrepreneur and advocate for personal growth."
     }));
 
-    // Combine enhanced original insights first, then new ones
+    // Combine enhanced original insights first, then new ones from database
     return [...enhancedOriginalInsights, ...newInsights];
   }, [convexInsights]);
 

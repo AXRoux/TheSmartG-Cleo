@@ -81,6 +81,161 @@ export const getInsight = query({
   },
 });
 
+// Get single insight by slug
+export const getInsightBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    try {
+      // Use the index for better performance
+      const insight = await ctx.db
+        .query("insights")
+        .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+        .first();
+      
+      if (!insight) {
+        return null;
+      }
+
+      // Get author safely
+      let author = null;
+      try {
+        if (insight.authorId) {
+          author = await ctx.db.get(insight.authorId);
+        }
+      } catch (authorError) {
+        console.log("Could not fetch author:", authorError);
+      }
+
+      return {
+        ...insight,
+        authorName: author?.name || insight.author || "Unknown Author",
+        authorEmail: author?.email || null,
+      };
+      
+    } catch (error) {
+      console.error("Error in getInsightBySlug:", error);
+      return null;
+    }
+  },
+});
+
+// Simple test query to debug database access
+export const testQuery = query({
+  args: {},
+  handler: async (ctx) => {
+    console.log("testQuery called");
+    try {
+      // Try the most basic query possible
+      const insights = await ctx.db.query("insights").take(1);
+      console.log("Basic query successful, found", insights.length, "insights");
+      
+      if (insights.length > 0) {
+        const insight = insights[0];
+        console.log("First insight:", {
+          id: insight._id,
+          title: insight.title,
+          slug: insight.slug
+        });
+      }
+      
+      return { success: true, count: insights.length };
+    } catch (error) {
+      console.error("testQuery error:", error);
+      console.error("Error type:", typeof error);
+      console.error("Error message:", error?.message);
+      console.error("Error stack:", error?.stack);
+      return { success: false, error: error.message };
+    }
+  },
+});
+
+// Migration function to fix missing slug fields
+export const fixMissingSlugs = mutation({
+  args: {},
+  handler: async (ctx) => {
+    console.log("Fixing missing slug fields...");
+    
+    const allInsights = await ctx.db.query("insights").collect();
+    console.log("Found", allInsights.length, "insights");
+    
+    let fixedCount = 0;
+    
+    for (const insight of allInsights) {
+      if (!insight.slug) {
+        console.log("Fixing insight:", insight.title);
+        
+        // Generate slug from title
+        const slug = insight.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
+        
+        await ctx.db.patch(insight._id, { slug });
+        fixedCount++;
+      }
+    }
+    
+    console.log("Fixed", fixedCount, "insights");
+    return { message: `Fixed ${fixedCount} insights with missing slugs` };
+  },
+});
+
+// Test function to create insight with minimal validation
+export const createInsightTest = mutation({
+  args: {
+    title: v.string(),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const slug = args.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+
+    try {
+      // Get any existing user to use as author (ensures a valid Id<"users"> value)
+      const existingUser = await ctx.db.query("users").first();
+      if (!existingUser) {
+        throw new Error("No users found. Initialize the database first.");
+      }
+
+      const newInsight = {
+        title: args.title,
+        slug,
+        content: args.content,
+        excerpt: `${args.content.substring(0, 200)}...`,
+        category: "Personal Growth",
+        author: existingUser.name || existingUser.email,
+        authorName: existingUser.name || undefined,
+        authorBio: "Entrepreneur and advocate for personal growth.",
+        authorId: existingUser._id,
+        readTime: "3 min",
+        status: "draft" as "draft",
+        tags: [],
+        publishedAt: undefined,
+        createdAt: now,
+        updatedAt: now,
+        viewCount: 0,
+      };
+
+      // Log the document we're about to insert
+      console.log("createInsightTest → newInsight", newInsight);
+      console.log("createInsightTest → existingUser", existingUser);
+
+      const insightId = await ctx.db.insert("insights", newInsight);
+      console.log("Insert successful, ID:", insightId);
+      return insightId;
+    } catch (error) {
+      console.error("Convex insert failed - DETAILED ERROR:", error);
+      console.error("Error type:", typeof error);
+      console.error("Error message:", error?.message);
+      console.error("Error stack:", error?.stack);
+      throw error;
+    }
+  },
+});
+
 // Create new insight
 export const createInsight = mutation({
   args: {
@@ -96,9 +251,20 @@ export const createInsight = mutation({
     authorBio: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    console.log("createInsight called with args:", JSON.stringify(args, null, 2));
+    
+    try {
+    // Generate URL-friendly slug from title
+    const generateSlug = (title: string) => {
+      return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    };
+
     const author = await ctx.db.get(args.authorId);
     if (!author) {
-      throw new Error("Author not found");
+      throw new Error(`Author not found with ID: ${args.authorId}. Please ensure you are logged in and your account exists.`);
     }
 
     // Calculate read time if not provided
@@ -109,9 +275,21 @@ export const createInsight = mutation({
       return `${minutes} min`;
     };
 
+    // Generate unique slug
+    let baseSlug = generateSlug(args.title);
+    let slug = baseSlug;
+    let counter = 1;
+    
+    // Check for duplicate slugs and append number if needed
+    while (await ctx.db.query("insights").withIndex("by_slug", (q) => q.eq("slug", slug)).first()) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+    
     const now = Date.now();
     const insightId = await ctx.db.insert("insights", {
       title: args.title,
+      slug: slug,
       content: args.content,
       excerpt: args.excerpt,
       category: args.category,
@@ -130,6 +308,11 @@ export const createInsight = mutation({
     });
 
     return insightId;
+    
+    } catch (error) {
+      console.error("Error in createInsight:", error);
+      throw error;
+    }
   },
 });
 

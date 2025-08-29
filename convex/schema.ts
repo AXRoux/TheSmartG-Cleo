@@ -15,6 +15,7 @@ export default defineSchema({
   // Insights/Content table
   insights: defineTable({
     title: v.string(),
+    slug: v.string(), // URL-friendly version of title
     content: v.string(),
     excerpt: v.string(),
     category: v.string(),
@@ -34,7 +35,8 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_category", ["category"])
     .index("by_author", ["authorId"])
-    .index("by_published_date", ["publishedAt"]),
+    .index("by_published_date", ["publishedAt"])
+    .index("by_slug", ["slug"]),
 
   // Categories table
   categories: defineTable({
