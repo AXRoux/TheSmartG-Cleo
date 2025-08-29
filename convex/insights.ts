@@ -269,10 +269,25 @@ export const createInsight = mutation({
 
     // Calculate read time if not provided
     const calculateReadTime = (content: string) => {
-      const wordsPerMinute = 200;
-      const wordCount = content.split(/\s+/).length;
-      const minutes = Math.ceil(wordCount / wordsPerMinute);
-      return `${minutes} min`;
+      // Clean the content and count actual words
+      const words = content.trim().split(/\s+/).filter(word => word.length > 0);
+      const wordCount = words.length;
+      
+      // Use 180 WPM for web content (more realistic than 200)
+      const wordsPerMinute = 180;
+      const minutes = wordCount / wordsPerMinute;
+      
+      // More nuanced rounding:
+      // - Less than 30 seconds: "< 1 min"
+      // - 30 seconds to 1.5 minutes: "1 min" 
+      // - Otherwise round to nearest minute
+      if (minutes < 0.5) {
+        return "< 1 min";
+      } else if (minutes <= 1.5) {
+        return "1 min";
+      } else {
+        return `${Math.round(minutes)} min`;
+      }
     };
 
     // Generate unique slug
@@ -316,6 +331,87 @@ export const createInsight = mutation({
   },
 });
 
+// Migration function to recalculate all reading times with improved algorithm
+export const recalculateReadingTimes = mutation({
+  args: {},
+  handler: async (ctx) => {
+    console.log("Starting reading time recalculation...");
+    
+    const calculateReadTime = (content: string) => {
+      // Clean the content and count actual words
+      const words = content.trim().split(/\s+/).filter(word => word.length > 0);
+      const wordCount = words.length;
+      
+      // Use 180 WPM for web content (more realistic than 200)
+      const wordsPerMinute = 180;
+      const minutes = wordCount / wordsPerMinute;
+      
+      // More nuanced rounding:
+      // - Less than 30 seconds: "< 1 min"
+      // - 30 seconds to 1.5 minutes: "1 min" 
+      // - Otherwise round to nearest minute
+      if (minutes < 0.5) {
+        return "< 1 min";
+      } else if (minutes <= 1.5) {
+        return "1 min";
+      } else {
+        return `${Math.round(minutes)} min`;
+      }
+    };
+
+    const allInsights = await ctx.db.query("insights").collect();
+    let updatedCount = 0;
+    const results = [];
+
+    for (const insight of allInsights) {
+      const oldReadTime = insight.readTime;
+      const newReadTime = calculateReadTime(insight.content);
+      
+      if (oldReadTime !== newReadTime) {
+        try {
+          await ctx.db.patch(insight._id, { 
+            readTime: newReadTime,
+            updatedAt: Date.now()
+          });
+          updatedCount++;
+          results.push({
+            id: insight._id,
+            title: insight.title,
+            oldReadTime,
+            newReadTime,
+            status: 'updated'
+          });
+        } catch (error) {
+          results.push({
+            id: insight._id,
+            title: insight.title,
+            oldReadTime,
+            newReadTime,
+            status: 'failed',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+        }
+      } else {
+        results.push({
+          id: insight._id,
+          title: insight.title,
+          readTime: oldReadTime,
+          status: 'unchanged'
+        });
+      }
+    }
+
+    console.log(`Reading time recalculation complete. Updated ${updatedCount} of ${allInsights.length} insights.`);
+    
+    return {
+      message: `Updated ${updatedCount} of ${allInsights.length} insights`,
+      updatedCount,
+      totalCount: allInsights.length,
+      results
+    };
+  },
+});
+
 // Update insight
 export const updateInsight = mutation({
   args: {
@@ -340,10 +436,25 @@ export const updateInsight = mutation({
 
     // Calculate read time if content is updated but readTime is not provided
     const calculateReadTime = (content: string) => {
-      const wordsPerMinute = 200;
-      const wordCount = content.split(/\s+/).length;
-      const minutes = Math.ceil(wordCount / wordsPerMinute);
-      return `${minutes} min`;
+      // Clean the content and count actual words
+      const words = content.trim().split(/\s+/).filter(word => word.length > 0);
+      const wordCount = words.length;
+      
+      // Use 180 WPM for web content (more realistic than 200)
+      const wordsPerMinute = 180;
+      const minutes = wordCount / wordsPerMinute;
+      
+      // More nuanced rounding:
+      // - Less than 30 seconds: "< 1 min"
+      // - 30 seconds to 1.5 minutes: "1 min" 
+      // - Otherwise round to nearest minute
+      if (minutes < 0.5) {
+        return "< 1 min";
+      } else if (minutes <= 1.5) {
+        return "1 min";
+      } else {
+        return `${Math.round(minutes)} min`;
+      }
     };
 
     const now = Date.now();

@@ -113,10 +113,25 @@ export const initializeDatabase = mutation({
         const now = Date.now();
         // Calculate read time based on content
         const calculateReadTime = (content: string) => {
-          const wordsPerMinute = 200;
-          const wordCount = content.split(/\s+/).length;
-          const minutes = Math.ceil(wordCount / wordsPerMinute);
-          return `${minutes} min`;
+          // Clean the content and count actual words
+          const words = content.trim().split(/\s+/).filter(word => word.length > 0);
+          const wordCount = words.length;
+          
+          // Use 180 WPM for web content (more realistic than 200)
+          const wordsPerMinute = 180;
+          const minutes = wordCount / wordsPerMinute;
+          
+          // More nuanced rounding:
+          // - Less than 30 seconds: "< 1 min"
+          // - 30 seconds to 1.5 minutes: "1 min" 
+          // - Otherwise round to nearest minute
+          if (minutes < 0.5) {
+            return "< 1 min";
+          } else if (minutes <= 1.5) {
+            return "1 min";
+          } else {
+            return `${Math.round(minutes)} min`;
+          }
         };
 
         // Generate slug from title
@@ -253,10 +268,25 @@ export const migrateInsights = mutation({
 
     // Calculate read time based on content
     const calculateReadTime = (content: string) => {
-      const wordsPerMinute = 200;
-      const wordCount = content.split(/\s+/).length;
-      const minutes = Math.ceil(wordCount / wordsPerMinute);
-      return `${minutes} min`;
+      // Clean the content and count actual words
+      const words = content.trim().split(/\s+/).filter(word => word.length > 0);
+      const wordCount = words.length;
+      
+      // Use 180 WPM for web content (more realistic than 200)
+      const wordsPerMinute = 180;
+      const minutes = wordCount / wordsPerMinute;
+      
+      // More nuanced rounding:
+      // - Less than 30 seconds: "< 1 min"
+      // - 30 seconds to 1.5 minutes: "1 min" 
+      // - Otherwise round to nearest minute
+      if (minutes < 0.5) {
+        return "< 1 min";
+      } else if (minutes <= 1.5) {
+        return "1 min";
+      } else {
+        return `${Math.round(minutes)} min`;
+      }
     };
 
     // Generate slug from title

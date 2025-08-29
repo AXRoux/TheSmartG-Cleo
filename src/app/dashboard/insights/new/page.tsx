@@ -64,7 +64,20 @@ export default function CreateInsightPage() {
   const calculateStats = useCallback((text: string) => {
     const words = text.trim().split(/\s+/).filter(word => word.length > 0);
     const wordCount = words.length;
-    const readingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 words per minute
+    
+    // Use 180 WPM for web content (more realistic than 200)
+    const wordsPerMinute = 180;
+    const minutes = wordCount / wordsPerMinute;
+    
+    // More nuanced rounding to match backend logic
+    let readingTime;
+    if (minutes < 0.5) {
+      readingTime = 0.5; // Will display as "< 1 min"
+    } else if (minutes <= 1.5) {
+      readingTime = 1;
+    } else {
+      readingTime = Math.round(minutes);
+    }
     
     setWordCount(wordCount);
     setReadingTime(readingTime);
@@ -530,7 +543,9 @@ Example:
                     <div className="text-xs text-white/60">Words</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xl font-bold text-white">{readingTime}</div>
+                    <div className="text-xl font-bold text-white">
+                      {readingTime < 1 ? "< 1" : readingTime}
+                    </div>
                     <div className="text-xs text-white/60">Min Read</div>
                   </div>
                 </div>
