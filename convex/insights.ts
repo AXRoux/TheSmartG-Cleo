@@ -142,9 +142,9 @@ export const testQuery = query({
     } catch (error) {
       console.error("testQuery error:", error);
       console.error("Error type:", typeof error);
-      console.error("Error message:", error?.message);
-      console.error("Error stack:", error?.stack);
-      return { success: false, error: error.message };
+      console.error("Error message:", error instanceof Error ? error.message : 'Unknown error');
+      console.error("Error stack:", error instanceof Error ? error.stack : 'No stack');
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
     }
   },
 });
@@ -229,8 +229,8 @@ export const createInsightTest = mutation({
     } catch (error) {
       console.error("Convex insert failed - DETAILED ERROR:", error);
       console.error("Error type:", typeof error);
-      console.error("Error message:", error?.message);
-      console.error("Error stack:", error?.stack);
+      console.error("Error message:", error instanceof Error ? error.message : 'Unknown error');
+      console.error("Error stack:", error instanceof Error ? error.stack : 'No stack');
       throw error;
     }
   },

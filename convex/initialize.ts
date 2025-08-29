@@ -210,9 +210,9 @@ export const testGetByGeneratedSlug = query({
 
 // Fix specific insight by ID
 export const fixInsightSlug = mutation({
-  args: { id: v.string() },
+  args: { id: v.id("insights") },
   handler: async (ctx, args) => {
-    const insight = await ctx.db.get(args.id as any);
+    const insight = await ctx.db.get(args.id);
     if (!insight) {
       return { error: "Insight not found" };
     }
@@ -270,7 +270,7 @@ export const migrateInsights = mutation({
     for (const insight of allInsights) {
       const updates: any = {};
       let needsUpdate = false;
-      const insightInfo = { id: insight._id, title: insight.title, hasSlug: !!insight.slug };
+      const insightInfo: any = { id: insight._id, title: insight.title, hasSlug: !!insight.slug };
 
       // Add slug if missing (CRITICAL FIX)
       if (!insight.slug) {
@@ -313,7 +313,7 @@ export const migrateInsights = mutation({
           updatedCount++;
           insightInfo.updated = true;
         } catch (error) {
-          insightInfo.error = error.message;
+          insightInfo.error = error instanceof Error ? error.message : 'Unknown error';
         }
       }
 
@@ -347,7 +347,7 @@ export const forceFixSlugs = mutation({
     };
 
     for (const doc of allDocs) {
-      const docInfo = { id: doc._id, title: doc.title || 'Untitled' };
+      const docInfo: any = { id: doc._id, title: doc.title || 'Untitled' };
       
       if (!doc.slug) {
         try {
@@ -366,7 +366,7 @@ export const forceFixSlugs = mutation({
           docInfo.addedSlug = slug;
           docInfo.status = 'fixed';
         } catch (error) {
-          docInfo.error = error.message;
+          docInfo.error = error instanceof Error ? error.message : 'Unknown error';
           docInfo.status = 'failed';
         }
       } else {
