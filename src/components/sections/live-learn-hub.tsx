@@ -37,7 +37,7 @@ const originalInsights: Insight[] = [
     id: 2,
     category: "Wellness",
     title: "Learn to be Present",
-    description: "Productivity is great, but presence is priceless—here's your reminder to slow down.",
+    description: "Be productive, but be present.",
     author: "Cleopatra Russell",
     date: "July 2025",
     image: "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQmo9MqmM8byt1wOxRQoEUX8uzgsABqFG96iYr",
@@ -47,7 +47,7 @@ const originalInsights: Insight[] = [
     id: 3,
     category: "Leadership",
     title: "Accountability & Action!",
-    description: "Owning your missteps is hard—but action is where accountability lives.",
+    description: "True accountability requires aligned action—own it, correct it, move.",
     author: "Cleopatra Russell",
     date: "July 2025",
     image: "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQLCbILUHYnVdzv2MFHq43opBNQbR0lUy9js8L",
@@ -57,7 +57,7 @@ const originalInsights: Insight[] = [
     id: 4,
     category: "Community",
     title: "Build Your Village",
-    description: "Why a strong support system is your greatest professional and personal asset.",
+    description: "Build relationships that protect, uplift, and stand with you.",
     author: "Cleopatra Russell",
     date: "July 2025",
     image: "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQrOwmPLKM2KSysEvGtQwp78iBWF1dh3ngeYHq",
@@ -67,7 +67,7 @@ const originalInsights: Insight[] = [
     id: 5,
     category: "Purpose",
     title: "What Do You Care About?",
-    description: "A reflection on impact, presence, and showing up for the least of these.",
+    description: "Impact is presence—show up so others feel seen, valued, capable.",
     author: "Cleopatra Russell",
     date: "July 2025",
     image: "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQHtkgVWhZbaKmj6XTviqYn3AUxPCIFuwO9p1o",
@@ -77,7 +77,7 @@ const originalInsights: Insight[] = [
     id: 6,
     category: "Mindset",
     title: "You Can't Fix Everything!",
-    description: "A PR pro's lesson in patience when control is impossible.",
+    description: "You can’t control every outcome. Choose patience, be deliberate, be still.",
     author: "Cleopatra Russell",
     date: "July 2025",
     image: "https://ph5fhfclo2.ufs.sh/f/bdXMin16JCrQ4D0SQebotgHOUk27uTqIec6lyVrpdhA9K5aZ",
@@ -326,9 +326,9 @@ export const LiveLearnHub = () => {
               href="https://www.linkedin.com/in/cleopatra-russell/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center justify-between bg-gray-900 hover:bg-gray-800 text-white rounded-full py-4 pl-6 pr-2 font-medium transition-all duration-300 hover:scale-105 min-w-[200px]"
+              className="group inline-flex items-center justify-between bg-gray-900 hover:bg-gray-800 text-white rounded-full py-4 pl-6 pr-2 font-medium transition-all duration-300 hover:scale-105 min-w-[220px] md:min-w-[260px]"
             >
-              <span>Explore All Insights</span>
+              <span className="text-sm md:text-base whitespace-nowrap">View More of Author</span>
               <div className="bg-white rounded-full p-2 ml-4 group-hover:bg-gray-100 transition-colors duration-300">
                 <ArrowUpRight className="w-5 h-5 text-gray-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
               </div>

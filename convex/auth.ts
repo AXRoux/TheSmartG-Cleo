@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import bcrypt from "bcryptjs";
 
 // Create a new user (for registration)
 export const createUser = mutation({
@@ -121,19 +122,24 @@ export const authenticateUser = mutation({
       throw new Error("Invalid credentials");
     }
 
-    // In a real app, you'd hash and compare passwords
-    // For demo purposes, we'll use a simple check
-    if (args.email === "Vance@Stratir.com" && args.password === "admin123") {
-      return {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        isActive: user.isActive
-      };
+    // Compare password using bcrypt if passwordHash is stored
+    if (user.passwordHash) {
+      const ok = await bcrypt.compare(args.password, user.passwordHash);
+      if (!ok) throw new Error("Invalid credentials");
+    } else {
+      // Fallback: support seeded demo account
+      if (!(args.email === "Vance@Stratir.com" && args.password === "admin123")) {
+        throw new Error("Invalid credentials");
+      }
     }
 
-    throw new Error("Invalid credentials");
+    return {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      isActive: user.isActive
+    };
   },
 });
 
@@ -157,10 +163,52 @@ export const initializeTestAccount = mutation({
       name: "Vance Stratir",
       role: "admin",
       isActive: true,
+      passwordHash: await bcrypt.hash("admin123", 10),
       createdAt: now,
       updatedAt: now,
     });
 
     return userId;
   },
+});
+
+// Request password reset: create token and send via email in Next route
+export const createPasswordResetToken = mutation({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+    if (!user) return null; // don't leak
+
+    const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`;
+    const expiresAt = Date.now() + 1000 * 60 * 30; // 30 minutes
+    await ctx.db.insert("passwordResetTokens", {
+      userId: user._id,
+      token,
+      expiresAt,
+      used: false,
+      createdAt: Date.now(),
+    });
+    return { token, userId: user._id };
+  }
+});
+
+// Complete password reset: validate token, hash password, update user
+export const completePasswordReset = mutation({
+  args: { token: v.string(), password: v.string() },
+  handler: async (ctx, args) => {
+    const rec = await ctx.db
+      .query("passwordResetTokens")
+      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .first();
+    if (!rec || rec.used || rec.expiresAt < Date.now()) {
+      throw new Error("Invalid or expired token");
+    }
+    const hash = await bcrypt.hash(args.password, 10);
+    await ctx.db.patch(rec.userId, { passwordHash: hash, updatedAt: Date.now() });
+    await ctx.db.patch(rec._id, { used: true });
+    return true;
+  }
 });

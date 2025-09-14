@@ -8,6 +8,7 @@ export default defineSchema({
     name: v.optional(v.string()),
     role: v.union(v.literal("admin"), v.literal("editor"), v.literal("viewer")),
     isActive: v.boolean(),
+    passwordHash: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_email", ["email"]),
@@ -72,4 +73,13 @@ export default defineSchema({
     .index("by_insight", ["insightId"])
     .index("by_event", ["event"])
     .index("by_timestamp", ["timestamp"]),
+
+  // Password reset tokens
+  passwordResetTokens: defineTable({
+    userId: v.id("users"),
+    token: v.string(),
+    expiresAt: v.number(),
+    used: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_token", ["token"]).index("by_user", ["userId"]),
 });

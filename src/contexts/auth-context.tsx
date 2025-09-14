@@ -77,33 +77,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      // Simple demo authentication - the user will be initialized in the database when needed
-      if (email === 'Vance@Stratir.com' && password === 'admin123') {
-        const userData = {
-          _id: 'jn737k33cksxew8vypzg3457s57petqv' as Id<"users">,
-          email: 'Vance@Stratir.com',
-          name: 'Vance Stratir',
-          role: 'admin' as const,
-          isActive: true
-        };
-        
-        // Generate a simple auth token
-        const authToken = `auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
-        // Set secure cookies
-        setCookie('auth-token', authToken, 7);
-        setCookie('user-id', userData._id, 7);
-        
-        // Also keep localStorage for backward compatibility
-        localStorage.setItem('currentUserId', userData._id);
-        
-        setUser(userData);
+      // Use Convex authenticateUser mutation
+      const result = await (await import("convex/browser")).ConvexHttpClient;
+      const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL as string;
+      if (!convexUrl) {
+        console.error('NEXT_PUBLIC_CONVEX_URL not set');
         setIsLoading(false);
-        return true;
+        return false;
       }
+      const Client = (await import('convex/browser')).ConvexHttpClient;
+      const convex = new Client(convexUrl);
+      const authenticated = await convex.mutation(api.auth.authenticateUser, { email, password });
+
+      const authToken = `auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      setCookie('auth-token', authToken, 7);
+      setCookie('user-id', authenticated._id, 7);
+      localStorage.setItem('currentUserId', authenticated._id);
       
+      setUser({
+        _id: authenticated._id,
+        email: authenticated.email,
+        name: authenticated.name,
+        role: authenticated.role,
+        isActive: authenticated.isActive,
+      });
       setIsLoading(false);
-      return false;
+      return true;
     } catch (error) {
       console.error('Login error:', error);
       setIsLoading(false);

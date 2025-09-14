@@ -68,37 +68,24 @@ export default function WhatDoYouCareAboutPage() {
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            In a world full of noise, it's easy to lose sight of what truly matters. We get caught up in the urgent 
-            and forget the important. We chase metrics and miss meaning.
+            This week's post is dedicated to my daughter, niece & nephew, all of whom graduated this year, one from high school and two from primary school. I think about the opportunities they've been afforded, not just to survive, but to thrive. And it makes me reflect on what truly matters.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Finding Your Why</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            What you care about shapes every decision you make. It determines where you spend your time, 
-            energy, and resources. It defines your legacy.
+            So this week I ask, what do you care about that isn’t money or material?
+            The other day I met a young man. It wasn’t the first time, I didn’t remember our previous interaction, but he remembered. He felt the need to let me know how I made him feel in a moment of despair. He said, “I’m not sure you remember me, but I want to thank you for how I felt during our last interaction. I felt seen, valued and appreciated, like I mattered.” That stayed with me.
           </p>
 
-          <blockquote className="border-l-4 border-blue-500 pl-6 italic text-gray-600 my-8">
-            "The question isn't who is going to let me; it's who is going to stop me." - Ayn Rand
-          </blockquote>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Showing Up for Others</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            Your values become real when you act on them. When you show up for "the least of these"—
-            those who can't offer you anything in return—you discover what you truly care about.
+            In a conversation with a close friend, we talked about our childhoods, the things we lacked, and how those experiences shaped who we are. We spoke about what we care about now, and how much of it comes from wanting to be what we at times didn’t have. We’re driven by the idea that if we can help just one young person feel less invisible, more capable, more valued, then we’ve done something meaningful.
           </p>
 
-          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
-            <li>Identify your core values through your actions, not your words</li>
-            <li>Look for opportunities to serve without recognition</li>
-            <li>Align your daily choices with your deeper purpose</li>
-            <li>Ask yourself: "What would I do if no one was watching?"</li>
-          </ul>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            For me lately, impact isn’t about wealth or possessions. It’s about presence. It’s about showing up with your time, your energy, your expertise, and maybe even your money, to give someone a real fighting chance. Not just for our children or loved ones, but those who the Good Book calls “the least of these.” Because sometimes, what changes a life isn’t a handout or a headline. It’s a moment. A connection. A feeling that someone sees you and cares. So, as we wrap another school year and celebrate the children who were "successful", I challenge us to also be present for the ones who carry a void we might be able to fill.
+          </p>
 
           <p className="text-gray-700 leading-relaxed">
-            What you care about is revealed not in what you say, but in what you do when no one is looking.
+            Be awesome this week.
           </p>
         </div>
 

@@ -184,13 +184,13 @@ function LoginPageContent() {
             </div>
 
             <div className="flex items-center justify-end">
-              <button
-                type="button"
+              <Link
+                href="/forgot-password"
                 className="text-sm text-white/70 hover:text-white transition-colors"
-                disabled={isLoading}
+                aria-label="Forgot your password?"
               >
                 Forgot your password?
-              </button>
+              </Link>
             </div>
 
             <Button

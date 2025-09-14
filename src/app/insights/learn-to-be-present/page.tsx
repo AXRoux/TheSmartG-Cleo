@@ -68,29 +68,23 @@ export default function LearnToBePresentPage() {
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            In our productivity-obsessed culture, we've forgotten the art of being present. We rush from task to task, 
-            meeting to meeting, always focused on what's next instead of what's now.
+            Be productive, but be present!
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">The Power of Presence</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            Presence isn't just about mindfulness—it's about showing up fully for your life. When you're present, 
-            you notice the small moments that make life meaningful. You connect deeper with others. You make better decisions.
+            With a long holiday weekend ahead here in The Bahamas, I felt compelled to share a lesson that my first mentor and dearest friend has been teaching me for more than a decade. For years, I struggled to grasp its importance. She was often frustrated by that, but over the past 12 months, I’ve finally come to understand why it mattered so much.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Simple Ways to Practice Presence</h2>
-          
-          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
-            <li>Put your phone away during conversations</li>
-            <li>Take three deep breaths before starting new tasks</li>
-            <li>Notice your surroundings during daily walks</li>
-            <li>Eat meals without distractions</li>
-            <li>Practice gratitude for small moments</li>
-          </ul>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            In our professional lives, it's easy to let our work become our identity. We strive for success, which is admirable, but is it sustainable? And what are we losing in the process?
+          </p>
 
-          <p className="text-gray-700 leading-relaxed">
-            Remember: productivity will get you places, but presence will help you enjoy the journey.
+          <p className="text-gray-700 leading-relaxed mb-6">
+            I say this as a recovering workaholic. That mindset has cost me relationships that were far more valuable than the fires I was trying to put out, the tasks I rushed to complete, or the people I thought I needed to impress.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            So here’s my reminder to you: It’s good to be productive, but don’t forget to be present. Be present with the people who truly matter. The ones who will still matter when your professional title changes.
           </p>
         </div>
 

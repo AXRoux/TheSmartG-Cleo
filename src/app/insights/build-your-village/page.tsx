@@ -68,35 +68,19 @@ export default function BuildYourVillagePage() {
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            The saying "it takes a village" applies to more than just raising children. Building a meaningful life, 
-            growing a business, or pursuing any significant goal requires a community of people who believe in you 
-            and support your journey.
+            What does your village say about you? Or maybe your village is so big, you actually have a tribe. In life and in business, our support systems have the power to save us, make us, or break us. Too often, we overlook the importance of working collectively and supporting each other in ways that allow all of us to succeed.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Your Professional Village</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            Your professional village includes mentors, peers, collaborators, and even competitors who push you 
-            to be better. These relationships provide opportunities, feedback, and perspective you can't get alone.
+            This is true not just in our personal lives, but in our professional ones too. Those worlds often become deeply intertwined. Colleagues become family. But are we building villages that truly allow us to be the best version of ourselves? What if we focused on building and maintaining relationships? What if we built villages that fight for us and with us for the long haul?
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Your Personal Village</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            Your personal village includes family, friends, and chosen family who support you through life's ups 
-            and downs. These are the people who celebrate your wins and help you navigate challenges.
+            This week’s thought is a question: Are the people you surround yourself with daily the right people? Are those you seek advice from sound in their thinking? Are you being intentional in the relationships you nurture?
           </p>
-
-          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
-            <li>Invest in relationships before you need them</li>
-            <li>Be the support you want to receive</li>
-            <li>Quality over quantity in your inner circle</li>
-            <li>Show up consistently, not just during crises</li>
-            <li>Express gratitude for your village regularly</li>
-          </ul>
 
           <p className="text-gray-700 leading-relaxed">
-            Your village is your foundation. Invest in it, nurture it, and watch how it transforms every area of your life.
+            This week, find someone you admire. Send them an email, say hello, take them to lunch. Build a village that protects, uplifts, and stands with you.
           </p>
         </div>
 

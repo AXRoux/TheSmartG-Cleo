@@ -68,7 +68,7 @@ export default function BoundariesProtectYourPeacePage() {
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            Setting boundaries isn't about building walls—it's about creating space for your peace to flourish. 
+            Setting boundaries isn't about building walls; it's about creating space for your peace to flourish. 
             In a world that constantly demands your attention, energy, and time, boundaries become your most 
             powerful tool for self-preservation.
           </p>
@@ -77,7 +77,7 @@ export default function BoundariesProtectYourPeacePage() {
           
           <p className="text-gray-700 leading-relaxed mb-6">
             Boundaries protect your peace by defining what you will and won't accept in your relationships, 
-            work, and personal life. They're not about being distant or unkind—they're about being intentional 
+            work, and personal life. They're not about being distant or unkind; they're about being intentional 
             with your energy and creating space for what truly matters.
           </p>
 
@@ -85,18 +85,10 @@ export default function BoundariesProtectYourPeacePage() {
             "Boundaries are not walls. They are gates with consciously chosen entry points."
           </blockquote>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">How to Set Healthy Boundaries</h2>
           
-          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
-            <li>Start small and be consistent</li>
-            <li>Communicate clearly and kindly</li>
-            <li>Don't over-explain your decisions</li>
-            <li>Practice saying no without guilt</li>
-            <li>Remember: boundaries are for you, not others</li>
-          </ul>
 
           <p className="text-gray-700 leading-relaxed">
-            Your peace is worth protecting. Setting boundaries isn't selfish—it's necessary. When you protect 
+            Your peace is worth protecting. Setting boundaries isn't selfish; it's necessary. When you protect 
             your peace, you show up better for the people and causes that matter most to you.
           </p>
         </div>

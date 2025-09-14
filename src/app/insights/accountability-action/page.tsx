@@ -68,29 +68,55 @@ export default function AccountabilityActionPage() {
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            True accountability isn't just about admitting when you're wrong—it's about what you do next. 
-            It's the bridge between recognizing your mistakes and creating meaningful change.
+            This week, let’s talk about something we rarely lean into: true accountability.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Beyond Apologies</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            Anyone can say "I'm sorry." But accountability requires you to dig deeper: What led to this situation? 
-            What systems or habits need to change? How will you prevent this from happening again?
+            Not responsibility. Accountability. There’s a difference. Responsibility is often assigned — a task, a role, a duty. But accountability is chosen. It comes from self-awareness. From the ability to look back and ask yourself honestly how your decisions, your actions, or your silence contributed to an outcome you may not be proud of.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">The Action Plan</h2>
-          
-          <ol className="list-decimal list-inside space-y-3 text-gray-700 mb-6">
-            <li>Acknowledge the impact, not just the intention</li>
-            <li>Take responsibility without making excuses</li>
-            <li>Create a specific plan for change</li>
-            <li>Follow through consistently</li>
-            <li>Check in with those affected</li>
-          </ol>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            In business and in life, we love to celebrate the wins. The promotions. The breakthroughs. The high points.
+            But when things fall apart, when relationships strain or results don’t come, when people are let down or we fail to show up, accountability gets real quiet. We hesitate to admit our role. We shift blame, retreat, or pretend it’s not that deep.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Most of my posts lately have come from lived experience, both personal and professional. Today’s message is deeply personal. 
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Over time, through painful lessons and honest conversations, I’ve learned that accountability is one of the hardest things to embrace. But it is also one of the most important. It means holding yourself to a standard that your clients, your family, and your friends deserve. And more than anything, it means refusing to stay stuck in your comfort zone.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Without self-awareness and discipline, we unintentionally create chaos. But with accountability and aligned action, we make room for healing, rebuilding, and growth.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Because action is where accountability lives. It’s not enough to recognize where you fell short. You have to move. You have to correct. You have to ask the hard questions, own the hard answers, and do the hard things.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            That won’t feel easy. It’s not supposed to.
+            But outside of your comfort zone is where people feel safe with you. It’s where colleagues begin to trust you again.
+            It’s where loved ones feel the love, not just hear it.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            So as we start this week, I’m challenging myself and I challenge you too:
+          </p>
+
+          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
+            <li>Be accountable. For what you did. For what you didn’t do.</li>
+            <li>Extend grace, yes, but also take action.</li>
+            <li>Fix what you can.</li>
+            <li>Grow where you need to.</li>
+            <li>Be better. Be honest.</li>
+          </ul>
 
           <p className="text-gray-700 leading-relaxed">
-            Remember: accountability without action is just empty words. The real work begins after the apology.
+            That’s how we lead. That’s how we connect.
+            That’s how we become who we’re meant to be.
           </p>
         </div>
 

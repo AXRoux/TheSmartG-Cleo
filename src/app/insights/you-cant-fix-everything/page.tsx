@@ -68,35 +68,11 @@ export default function YouCantFixEverythingPage() {
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            As someone who's spent years in PR and crisis management, I've learned one of the hardest lessons: 
-            you can't fix everything. And trying to do so will only drain your energy and dilute your impact.
+            I’m talking to myself this week, but since you’re here reading, come along for a PR professional’s scariest moment. It's the one where you realize you can’t control the outcome. Not in this situation, at least.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">The Illusion of Control</h2>
-          
           <p className="text-gray-700 leading-relaxed mb-6">
-            We live in a culture that tells us we should be able to solve every problem, manage every crisis, 
-            and control every outcome. But some things are simply beyond our influence.
-          </p>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Focus Your Energy</h2>
-          
-          <p className="text-gray-700 leading-relaxed mb-6">
-            When you accept that you can't fix everything, you free yourself to focus on what you can actually change. 
-            This isn't giving up—it's strategic thinking.
-          </p>
-
-          <ul className="list-disc list-inside space-y-3 text-gray-700 mb-6">
-            <li>Identify what's within your control vs. what's not</li>
-            <li>Channel your energy toward high-impact actions</li>
-            <li>Practice letting go of outcomes you can't influence</li>
-            <li>Focus on your response, not others' actions</li>
-            <li>Find peace in doing your part well</li>
-          </ul>
-
-          <p className="text-gray-700 leading-relaxed">
-            Sometimes the most powerful thing you can do is acknowledge what you can't fix and focus your 
-            energy where it can make a real difference.
+            You’ve gotten so used to managing every moving piece that it annoys you on rare occasions when there is unpredictability. It pushes you, frustrates you, tempts you to throw your hands up. But don’t. This week, for now, let’s choose patience. Let’s be deliberate, hopeful, and still. Because this week, you’ll remember that while you think you're always in control, the truth is, you can’t fix everything... no matter how much you want to!
           </p>
         </div>
 

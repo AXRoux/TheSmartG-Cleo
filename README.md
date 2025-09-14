@@ -1,3 +1,13 @@
+# Environment & Emails
+
+Set the following environment variables:
+
+- `NEXT_PUBLIC_CONVEX_URL` – Convex deployment URL
+- `RESEND_API_KEY` – Resend API key with domain verified for `stratir.com`
+- `NEXT_PUBLIC_APP_URL` – Public URL of the app (e.g. https://your-domain)
+
+Forgot/Reset password flow uses Resend and sends from `administrator@stratir.com`.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
