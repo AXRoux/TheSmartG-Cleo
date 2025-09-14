@@ -53,21 +53,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check for existing authentication on mount
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       const authToken = getCookie('auth-token');
       const userId = getCookie('user-id');
-      
-      if (authToken && userId) {
-        // In a real app, you'd validate the token with your backend
-        setUser({ 
-          _id: userId as Id<"users">, 
-          email: 'Vance@Stratir.com', 
-          name: 'Vance Stratir', 
-          role: 'admin',
-          isActive: true 
-        });
+      if (!authToken || !userId) {
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
+
+      try {
+        const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL as string | undefined;
+        if (!convexUrl) {
+          setIsLoading(false);
+          return;
+        }
+
+        const { ConvexHttpClient } = await import('convex/browser');
+        const convex = new ConvexHttpClient(convexUrl);
+        const current = await convex.query(api.auth.getCurrentUser, { userId: userId as Id<'users'> });
+        if (current) {
+          setUser(current as User);
+        }
+      } catch (err) {
+        console.error('Auth bootstrap error:', err);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuth();

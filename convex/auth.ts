@@ -124,7 +124,7 @@ export const authenticateUser = mutation({
 
     // Compare password using bcrypt if passwordHash is stored
     if (user.passwordHash) {
-      const ok = await bcrypt.compare(args.password, user.passwordHash);
+      const ok = bcrypt.compareSync(args.password, user.passwordHash);
       if (!ok) throw new Error("Invalid credentials");
     } else {
       // Fallback: support seeded demo account
@@ -161,7 +161,7 @@ export const initializeTestAccount = mutation({
         name: "Vance Stratir",
         role: "admin",
         isActive: true,
-        passwordHash: await bcrypt.hash("admin123", 10),
+        passwordHash: bcrypt.hashSync("admin123", 10),
         createdAt: now,
         updatedAt: now,
       });
@@ -202,7 +202,7 @@ export const adminUpsertUser = mutation({
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .first();
 
-    const passwordHash = await bcrypt.hash(args.password, 10);
+    const passwordHash = bcrypt.hashSync(args.password, 10);
 
     if (existing) {
       await ctx.db.patch(existing._id, {
@@ -262,7 +262,7 @@ export const completePasswordReset = mutation({
     if (!rec || rec.used || rec.expiresAt < Date.now()) {
       throw new Error("Invalid or expired token");
     }
-    const hash = await bcrypt.hash(args.password, 10);
+    const hash = bcrypt.hashSync(args.password, 10);
     await ctx.db.patch(rec.userId, { passwordHash: hash, updatedAt: Date.now() });
     await ctx.db.patch(rec._id, { used: true });
     return true;

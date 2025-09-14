@@ -41,7 +41,7 @@ export default function CreateInsightPage() {
   // Fetch categories for dropdown
   const categories = useQuery(api.categories.getCategories, { activeOnly: true });
   const createInsight = useMutation(api.insights.createInsight);
-  const initializeCategories = useMutation(api.initialize.initializeDatabase);
+  const initializeCategories = useMutation(api.categories.initializeDefaultCategories);
 
   // Debug: Log categories and user
   useEffect(() => {
@@ -234,16 +234,15 @@ export default function CreateInsightPage() {
     setIsLoading(true);
 
     try {
-      // Ensure the database is initialized (creates user and categories)
-      const initResult = await initializeCategories(); // This is actually the initializeDatabase mutation
-      
-      // Use the logged-in user ID or the user ID from initialization
-      let authorId = user?._id;
-      
-      if (!authorId) {
-        // If no user is logged in, we need to get the initialized user ID
-        // The initializeDatabase returns the user ID
-        authorId = initResult?.userId || "jn737k33cksxew8vypzg3457s57petqv" as any; // Final fallback
+      // Ensure default categories exist only if none are present
+      if (categories !== undefined && categories.length === 0) {
+        await initializeCategories();
+      }
+
+      if (!user?._id) {
+        toast.error('You must be logged in to publish insights');
+        setIsLoading(false);
+        return;
       }
       
       const result = await createInsight({
@@ -251,7 +250,7 @@ export default function CreateInsightPage() {
         content: content.trim(),
         excerpt: excerpt.trim() || `${content.substring(0, 200)}...`,
         category: category,
-        authorId: authorId as any,
+        authorId: user._id as any,
         status: status,
         featuredImage: featuredImage || undefined,
         tags: tags,

@@ -43,7 +43,7 @@ export default function DashboardHome() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
           <div className="flex-1">
             <h1 className="text-5xl font-light text-white mb-3 tracking-tight">
-              Welcome back, {isLoading ? "..." : "Vance"}
+              Welcome back, {isLoading ? "..." : (user?.name || user?.email || "")}
             </h1>
             <p className="text-lg text-gray-400 font-light">
               Ready to create something amazing today?
@@ -158,19 +158,7 @@ export default function DashboardHome() {
               </Card>
             </Link>
             
-            <Link href="/dashboard/media" className="group">
-              <Card className="bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-200 h-full">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <Camera className="h-5 w-5 text-white/70" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-medium text-white">Upload Images</h3>
-                    <p className="text-sm text-white/60">Manage your media library</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            {/* Media card removed */}
           </div>
         </div>
 

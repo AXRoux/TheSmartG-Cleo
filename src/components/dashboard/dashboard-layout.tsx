@@ -45,11 +45,6 @@ const navigationItems: NavItem[] = [
     icon: BarChart3,
   },
   {
-    href: '/dashboard/media',
-    label: 'Media Library',
-    icon: Image,
-  },
-  {
     href: '/dashboard/settings',
     label: 'Settings',
     icon: Settings,
