@@ -14,18 +14,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const resendApiKey = process.env.RESEND_API_KEY;
+    const resendApiKey = process.env.RESEND_API_KEY?.trim();
     if (!resendApiKey) {
       return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
     }
 
     // Proceed for any email; we'll avoid enumeration by returning ok if not found later
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const origin = typeof baseUrl === 'string' && baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || process.env.VERCEL_URL?.trim() || 'http://localhost:3000';
+    const origin = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
     // Create a Convex token record
-    const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+    const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL?.trim();
     if (!convexUrl) {
       return NextResponse.json({ error: 'Convex URL not configured' }, { status: 500 });
     }

@@ -9,13 +9,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const resendApiKey = process.env.RESEND_API_KEY;
+    const resendApiKey = process.env.RESEND_API_KEY?.trim();
     if (!resendApiKey) {
       return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const origin = typeof baseUrl === 'string' && baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || process.env.VERCEL_URL?.trim() || 'http://localhost:3000';
+    const origin = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
     const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
     const resetUrl = `${origin}/reset-password/${encodeURIComponent(token)}`;
 
