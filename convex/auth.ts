@@ -147,29 +147,85 @@ export const authenticateUser = mutation({
 export const initializeTestAccount = mutation({
   args: {},
   handler: async (ctx) => {
-    // Check if test account already exists
-    const existingUser = await ctx.db
+    const now = Date.now();
+
+    // Ensure Vance exists (demo admin with default password)
+    const vance = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", "Vance@Stratir.com"))
       .first();
-
-    if (existingUser) {
-      return existingUser._id;
+    let vanceId = vance?._id;
+    if (!vance) {
+      vanceId = await ctx.db.insert("users", {
+        email: "Vance@Stratir.com",
+        name: "Vance Stratir",
+        role: "admin",
+        isActive: true,
+        passwordHash: await bcrypt.hash("admin123", 10),
+        createdAt: now,
+        updatedAt: now,
+      });
     }
 
+    // Ensure Cleo exists (no default password; use reset flow to set one)
+    const cleo = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", "cleo@thesmartg.com"))
+      .first();
+    if (!cleo) {
+      await ctx.db.insert("users", {
+        email: "cleo@thesmartg.com",
+        name: "Cleo",
+        role: "admin",
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    return vanceId as any;
+  },
+});
+
+// Admin upsert user with password hashing
+export const adminUpsertUser = mutation({
+  args: {
+    email: v.string(),
+    password: v.string(),
+    name: v.optional(v.string()),
+    role: v.optional(v.union(v.literal("admin"), v.literal("editor"), v.literal("viewer"))),
+  },
+  handler: async (ctx, args) => {
     const now = Date.now();
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+
+    const passwordHash = await bcrypt.hash(args.password, 10);
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        name: args.name ?? existing.name,
+        role: args.role ?? existing.role,
+        passwordHash,
+        isActive: true,
+        updatedAt: now,
+      });
+      return existing._id;
+    }
+
     const userId = await ctx.db.insert("users", {
-      email: "Vance@Stratir.com",
-      name: "Vance Stratir",
-      role: "admin",
+      email: args.email,
+      name: args.name,
+      role: args.role ?? "admin",
       isActive: true,
-      passwordHash: await bcrypt.hash("admin123", 10),
+      passwordHash,
       createdAt: now,
       updatedAt: now,
     });
-
     return userId;
-  },
+  }
 });
 
 // Request password reset: create token and send via email in Next route
